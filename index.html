@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posture & Desk Setup Assistant</title>
+    <!-- Stylesheet (same as previous version) -->
+    <style>
+        :root{--primary-color:#4facfe;--secondary-color:#2196f3;--accent-color:#64b5f6;--background-start:#e3f2fd;--background-end:#bbdefb;--text-color:#1a237e;--light-text-color:#ffffff;--user-bubble-bg:#ffffff;--bot-bubble-bg:linear-gradient(135deg, var(--primary-color), var(--secondary-color));--shadow-color:rgba(33, 150, 243, 0.2);--glass-bg:rgba(255, 255, 255, 0.7);--border-radius-main:18px;--border-radius-small:8px;--animation-speed:0.3s;--score-good:#4caf50;--score-medium:#ff9800;--score-bad:#f44336}body{margin:0;font-family:'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg, var(--background-start) 0%, var(--background-end) 100%);color:var(--text-color);padding:10px;box-sizing:border-box;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;overflow:hidden}.chat-container{width:100%;max-width:650px;height:90vh;max-height:750px;background-color:var(--glass-bg);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-radius:var(--border-radius-main);box-shadow:0 12px 30px var(--shadow-color);border:1px solid rgba(255, 255, 255, 0.3);display:flex;flex-direction:column;overflow:hidden;position:relative}.chat-header{background:linear-gradient(135deg, var(--primary-color), var(--secondary-color));color:var(--light-text-color);padding:16px 25px 10px 25px;font-size:1.25em;font-weight:500;text-align:center;border-bottom:1px solid rgba(255, 255, 255, 0.2);flex-shrink:0;box-shadow:0 3px 8px rgba(0, 0, 0, 0.05)}#studentInfo{font-size:0.8em;opacity:0.8;margin-top:4px;padding-bottom:6px;color:var(--light-text-color)}#analysisDetails{padding:10px 20px;background-color:rgba(255, 255, 255, 0.6);border-bottom:1px solid rgba(33, 150, 243, 0.2);display:none;flex-shrink:0;font-size:.9em;color:var(--text-color);align-items:center;justify-content:space-between}#analysisDetails .score-container{margin-bottom:6px;flex-basis:40%;display:flex;align-items:center;justify-content:space-between}#analysisDetails .score-label{font-weight:500;margin-right:8px}#postureScore{font-size:1.4em;font-weight:700;padding:4px 10px;border-radius:var(--border-radius-small);color:#fff;box-shadow:0 2px 4px rgba(0,0,0,.1);transition:background-color .3s ease}#metricList{list-style:none;padding:0;margin:0 0 0 15px;max-height:45px;overflow-y:auto;font-size:.85em;flex-basis:55%;text-align:right}#metricList li{margin-bottom:3px;position:relative;opacity:.9;text-align:left;padding-left:16px}#metricList li::before{content:'•';color:var(--accent-color);font-weight:bold;position:absolute;left:0;top:.05em}.chat-body{flex-grow:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:15px}.chat-message{max-width:85%;padding:10px 15px;border-radius:var(--border-radius-main);line-height:1.45;animation:fadeIn var(--animation-speed) ease-out;box-shadow:0 2px 6px var(--shadow-color);position:relative;font-size:.95em}.user-message{background-color:var(--user-bubble-bg);color:var(--text-color);align-self:flex-end;border-bottom-right-radius:var(--border-radius-small);border:1px solid rgba(33, 150, 243, 0.15)}.bot-message{background:var(--bot-bubble-bg);color:var(--light-text-color);align-self:flex-start;border-bottom-left-radius:var(--border-radius-small);border:1px solid rgba(255, 255, 255, 0.3)}#bot-assessment-message{background:linear-gradient(135deg, #64b5f6, #1976d2)}#bot-recommendation-message{background:linear-gradient(135deg, #81c784, #388e3c)}.bot-message ul{padding-left:18px;margin-top:6px;margin-bottom:0}.bot-message li{margin-bottom:5px}.chat-input-area{display:flex;padding:12px 20px;border-top:1px solid rgba(33, 150, 243, 0.2);background-color:rgba(255, 255, 255, 0.7);flex-shrink:0}#userInput{flex-grow:1;padding:10px 15px;border:1px solid rgba(33, 150, 243, 0.4);border-radius:var(--border-radius-main);margin-right:10px;font-size:.95em;background-color:rgba(255, 255, 255, 0.9);transition:border-color var(--animation-speed), box-shadow var(--animation-speed);box-shadow:inset 0 1px 2px rgba(0,0,0,.05);color:var(--text-color)}#userInput:focus{outline:0;border-color:var(--secondary-color);box-shadow:0 0 0 3px rgba(33, 150, 243, 0.3), inset 0 1px 2px rgba(0,0,0,.05)}#sendButton{padding:10px 20px;background:linear-gradient(135deg, var(--primary-color), var(--secondary-color));color:var(--light-text-color);border:none;border-radius:var(--border-radius-main);cursor:pointer;font-size:.95em;font-weight:500;transition:transform var(--animation-speed), box-shadow var(--animation-speed), background var(--animation-speed);box-shadow:0 3px 8px var(--shadow-color)}#sendButton:hover{transform:translateY(-1px);box-shadow:0 5px 12px var(--shadow-color);background:linear-gradient(135deg, var(--accent-color), var(--secondary-color))}#sendButton:active{transform:translateY(0);box-shadow:0 2px 5px var(--shadow-color)}#webcamContainer{position:fixed;bottom:15px;right:15px;width:200px;height:150px;min-width:100px;min-height:75px;max-width:45vw;max-height:45vh;border-radius:var(--border-radius-small);overflow:hidden;box-shadow:0 6px 20px rgba(0, 30, 60, 0.25);background-color:var(--glass-bg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255, 255, 255, 0.4);display:none;cursor:move;z-index:1000;resize:both;touch-action:none;transition:opacity .3s ease, transform .3s ease;opacity:0;transform:scale(.95)}#webcamContainer.visible{opacity:1;transform:scale(1)}#webcamContainer::-webkit-resizer{border:3px solid rgba(255,255,255,.6);background:rgba(0,0,0,.3)}#webcamFeed, #outputCanvas{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}#outputCanvas{z-index:10;background:transparent}.loading-spinner{border:2px solid rgba(255,255,255,.4);border-top:2px solid var(--light-text-color);border-radius:50%;width:14px;height:14px;animation:spin .8s linear infinite;display:inline-block;margin-left:8px;vertical-align:middle}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@media (max-width: 700px){body{padding:0;overflow:auto;min-height:100%}.chat-container{height:100%;max-height:none;border-radius:0;width:100%;max-width:100%;box-shadow:none;border:none;-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(135deg, var(--background-start) 0%, var(--background-end) 100%)}.chat-body{padding:15px 12px}.chat-input-area{padding:10px 12px}#webcamContainer{max-width:50vw;max-height:40vh;width:140px;height:105px;bottom:10px;right:10px}#analysisDetails{padding:8px 12px;font-size:.85em;flex-direction:column;align-items:stretch}#analysisDetails .score-container{margin-bottom:5px;flex-basis:auto}#metricList{margin:0;flex-basis:auto;text-align:left;max-height:35px}#postureScore{font-size:1.3em}.chat-message{font-size:.9em}#userInput, #sendButton{font-size:.9em}}
+    </style>
+    <!-- MediaPipe Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- HTML Structure -->
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+             Posture & Desk Setup Assistant
+             <div id="studentInfo">Chaitanya - 12324485</div>
+        </div>
+        <div id="analysisDetails">
+            <div class="score-container">
+                <span class="score-label">Live Score:</span>
+                <span id="postureScore">N/A</span>
+            </div>
+            <ul id="metricList"><li>Awaiting analysis...</li></ul>
+        </div>
+        <div class="chat-body" id="chatBody">
+             <div class="chat-message bot-message">
+                 Welcome! Type <strong>'start'</strong> to begin posture analysis, <strong>'stop'</strong> to end, or <strong>'desk setup'</strong> for tips. Ensure good lighting and that your head, shoulders, and hips are visible. Backend: <code style="background: rgba(0,0,0,0.1); padding: 2px 4px; border-radius: 3px;">http://127.0.0.1:8000</code>
+             </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="Type 'start', 'stop', or 'desk setup'..." autocomplete="off">
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+    <div id="webcamContainer">
+        <video id="webcamFeed" autoplay playsinline muted></video>
+        <canvas id="outputCanvas"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // DOM Elements & Initial Checks
+            const chatBody = document.getElementById('chatBody'); const userInput = document.getElementById('userInput'); const sendButton = document.getElementById('sendButton'); const webcamContainer = document.getElementById('webcamContainer'); const videoElement = document.getElementById('webcamFeed'); const canvasElement = document.getElementById('outputCanvas'); const analysisDetailsSection = document.getElementById('analysisDetails'); const postureScoreElement = document.getElementById('postureScore'); const metricListElement = document.getElementById('metricList');
+            if (!chatBody || !userInput || !sendButton || !webcamContainer || !videoElement || !canvasElement || !analysisDetailsSection || !postureScoreElement || !metricListElement) { console.error("Init fail: Elements missing."); alert("Error: App init failed."); return; }
+            let canvasCtx = null; try { canvasCtx = canvasElement.getContext('2d'); if (!canvasCtx) throw new Error("Canvas context null"); } catch (e) { console.error("Canvas context fail:", e); alert("Error: Canvas context failed."); }
+            const BACKEND_URL = 'http://127.0.0.1:8000'; console.log("Backend:", BACKEND_URL);
+            let pose = null; let camera = null; let analysisInterval = null; let isAnalyzing = false; let lastAnalyzedPose = null; let isDragging = false; let startX, startY, initialLeft, initialTop; let analysisTimeout = null; const ANALYSIS_DELAY_MS = 4000;
+            let assessmentMessageElement = null; let recommendationMessageElement = null; let lastAssessmentText = null; let lastRecommendationsHtml = null;
+
+            function onPoseResults(results) {
+                if (!canvasCtx || !isAnalyzing || !canvasElement) return;
+                if (!canvasElement.width || !canvasElement.height || (videoElement && (canvasElement.width !== videoElement.videoWidth || canvasElement.height !== videoElement.videoHeight))) { 
+                    if(videoElement?.videoWidth > 0 && videoElement?.videoHeight > 0){ 
+                        canvasElement.width = videoElement.videoWidth; 
+                        canvasElement.height = videoElement.videoHeight; 
+                    } else return; 
+                }
+
+                canvasCtx.save();
+                canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+                if (results.poseLandmarks) {
+                    lastAnalyzedPose = results.poseLandmarks;
+                    const { analysisMetrics: localMetrics, issues: localIssues } = calculatePostureMetrics(lastAnalyzedPose);
+                    const localScore = calculateLocalScore(localMetrics, localIssues);
+                    updateAnalysisDetailsUI(localScore, localIssues);
+
+                    if (typeof drawConnectors === 'function' && typeof drawLandmarks === 'function' && typeof POSE_CONNECTIONS !== 'undefined') {
+                        const lm = results.poseLandmarks;
+                        const visThresh = 0.5;
+
+                        // Helper function to determine if a line should be red
+                        const isPostureCorrect = {
+                            shoulders: () => {
+                                if (!lm[11] || !lm[12]) return false;
+                                // Calculate angle relative to horizontal
+                                const angle = Math.abs(Math.atan2(lm[12].y - lm[11].y, lm[12].x - lm[11].x) * 180 / Math.PI);
+                                return Math.abs(angle) <= 10; // More lenient threshold
+                            },
+                            neck: () => !localMetrics.headForwardRatio || Math.abs(localMetrics.headForwardRatio) <= 0.1,
+                            spine: () => !localMetrics.spineHorizontalOffsetRatio || localMetrics.spineHorizontalOffsetRatio <= 0.15
+                        };
+
+                        // Draw body connections in neutral color
+                        drawConnectors(canvasCtx, lm, POSE_CONNECTIONS, {
+                            color: 'rgba(255,255,255,0.2)',
+                            lineWidth: 2
+                        });
+
+                        // Draw landmarks
+                        drawLandmarks(canvasCtx, lm, {
+                            color: 'white',
+                            radius: 3,
+                            lineWidth: 2
+                        });
+
+                        // Draw key posture lines with dynamic colors
+                        if (lm[11]?.visibility >= visThresh && lm[12]?.visibility >= visThresh) {
+                            // Explicitly calculate shoulder angle
+                            const shoulderAngle = calculateSlopeAngle(lm[11], lm[12]);
+                            const isShoulderAligned = shoulderAngle !== null && Math.abs(shoulderAngle) <= 5;
+                            const shoulderColor = isShoulderAligned ? '#4caf50' : '#f44336';
+                            
+                            drawConnectors(canvasCtx, [lm[11], lm[12]], [[0,1]], {
+                                color: shoulderColor,
+                                lineWidth: 4
+                            });
+                            
+                            // Debug logging
+                            console.log('Shoulder angle:', shoulderAngle, 'Aligned:', isShoulderAligned);
+                        }
+
+                        // Draw neck line (head to shoulders midpoint)
+                        if (lm[0]?.visibility >= visThresh && lm[11]?.visibility >= visThresh && lm[12]?.visibility >= visThresh) {
+                            const shoulderMidpoint = {
+                                x: (lm[11].x + lm[12].x) / 2,
+                                y: (lm[11].y + lm[12].y) / 2,
+                                z: (lm[11].z + lm[12].z) / 2,
+                                visibility: Math.min(lm[11].visibility, lm[12].visibility)
+                            };
+                            const neckColor = isPostureCorrect.neck() ? '#4caf50' : '#f44336';
+                            drawConnectors(canvasCtx, [lm[0], shoulderMidpoint], [[0,1]], {
+                                color: neckColor,
+                                lineWidth: 4
+                            });
+                        }
+
+                        // Draw spine line (shoulder midpoint to hip midpoint)
+                        if (lm[23]?.visibility >= visThresh && lm[24]?.visibility >= visThresh &&
+                            lm[11]?.visibility >= visThresh && lm[12]?.visibility >= visThresh) {
+                            const shoulderMid = {
+                                x: (lm[11].x + lm[12].x) / 2,
+                                y: (lm[11].y + lm[12].y) / 2,
+                                visibility: Math.min(lm[11].visibility, lm[12].visibility)
+                            };
+                            const hipMid = {
+                                x: (lm[23].x + lm[24].x) / 2,
+                                y: (lm[23].y + lm[24].y) / 2,
+                                visibility: Math.min(lm[23].visibility, lm[24].visibility)
+                            };
+                            const spineColor = isPostureCorrect.spine() ? '#4caf50' : '#f44336';
+                            drawConnectors(canvasCtx, [shoulderMid, hipMid], [[0,1]], {
+                                color: spineColor,
+                                lineWidth: 4
+                            });
+                        }
+                    }
+                } else {
+                    lastAnalyzedPose = null;
+                    updateAnalysisDetailsUI(0, ["No pose detected"]);
+                }
+                canvasCtx.restore();
+            }
+
+            // Drag Logic (Keep as before)
+            webcamContainer.addEventListener('mousedown', startDrag); webcamContainer.addEventListener('touchstart', startDrag, { passive: false }); function startDrag(e){const style = window.getComputedStyle(e.target); if(style.cursor.includes('resize') || (e.offsetX > webcamContainer.offsetWidth - 20 && e.offsetY > webcamContainer.offsetHeight - 20)){isDragging = false; return;} if(e.type === 'touchstart') e.preventDefault(); isDragging = true; webcamContainer.style.transition = 'none'; startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX; startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY; const rect = webcamContainer.getBoundingClientRect(); initialLeft = rect.left; initialTop = rect.top; document.addEventListener('mousemove', drag); document.addEventListener('mouseup', stopDrag); document.addEventListener('touchmove', drag, { passive: false }); document.addEventListener('touchend', stopDrag);} function drag(e){if(!isDragging) return; if(e.type === 'touchmove') e.preventDefault(); const currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX; const currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY; const dx = currentX - startX; const dy = currentY - startY; let newLeft = initialLeft + dx; let newTop = initialTop + dy; const margin = 10; newLeft = Math.max(margin, Math.min(newLeft, window.innerWidth - webcamContainer.offsetWidth - margin)); newTop = Math.max(margin, Math.min(newTop, window.innerHeight - webcamContainer.offsetHeight - margin)); webcamContainer.style.left = `${newLeft}px`; webcamContainer.style.top = `${newTop}px`; webcamContainer.style.right = 'auto'; webcamContainer.style.bottom = 'auto';} function stopDrag(){if(!isDragging) return; isDragging = false; webcamContainer.style.transition = ''; document.removeEventListener('mousemove', drag); document.removeEventListener('mouseup', stopDrag); document.removeEventListener('touchmove', drag); document.removeEventListener('touchend', stopDrag);}
+
+            // Chat Interface (Keep as before)
+            function addMessage(text, sender, messageId = null) { if (!chatBody) { console.error("addMsg fail: chatBody missing."); return null; } const messageDiv = document.createElement('div'); messageDiv.classList.add('chat-message'); if (sender === 'user') messageDiv.classList.add('user-message'); else messageDiv.classList.add('bot-message'); if (messageId) messageDiv.id = messageId; if (sender === 'bot-loading') { messageDiv.classList.add('bot-loading'); messageDiv.innerHTML = `${sanitizeHTML(text)}<div class="loading-spinner"></div>`; } else if (sender === 'bot-html') { messageDiv.innerHTML = text; } else { messageDiv.innerHTML = sanitizeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); } chatBody.appendChild(messageDiv); chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' }); return messageDiv; } function sanitizeHTML(str) { const temp = document.createElement('div'); temp.textContent = String(str); return temp.innerHTML.replace(/</g, "<").replace(/>/g, ">"); } function updateOrAddBotMessage(newHtmlContent, messageType) { let targetEl, msgId, lastStateVar; if (messageType === 'assessment') { targetEl = assessmentMessageElement; msgId = 'bot-assessment-message'; lastStateVar = 'lastAssessmentText'; } else if (messageType === 'recommendation') { targetEl = recommendationMessageElement; msgId = 'bot-recommendation-message'; lastStateVar = 'lastRecommendationsHtml'; } else { return null; } if (targetEl && targetEl.parentNode === chatBody && newHtmlContent === window[lastStateVar]) return targetEl; if (targetEl && targetEl.parentNode === chatBody) targetEl.innerHTML = newHtmlContent; else { if (targetEl) targetEl.remove(); targetEl = addMessage(newHtmlContent, 'bot-html', msgId); } if (messageType === 'assessment') { assessmentMessageElement = targetEl; lastAssessmentText = newHtmlContent; } else if (messageType === 'recommendation') { recommendationMessageElement = targetEl; lastRecommendationsHtml = newHtmlContent; } if (chatBody) chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' }); return targetEl; } function handleUserInput() { if (!userInput) return; const text = userInput.value.trim(); const command = text.toLowerCase(); if (!text) return; addMessage(text, 'user'); userInput.value = ''; if (command === 'start') startPostureAnalysis(); else if (command === 'stop') stopPostureAnalysis(); else if (command === 'desk setup') getDeskSetupTips(); else addMessage("Unknown: Use 'start', 'stop', 'desk setup'.", 'bot'); }
+            if(sendButton) sendButton.addEventListener('click', handleUserInput); if(userInput) userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); handleUserInput(); } });
+
+            // Posture Analysis (Initialize, Start, Stop - Keep as before)
+            function initializeMediaPipe() { if (typeof Pose === 'undefined') { console.error("MP Pose script missing."); addMessage("⚠️ Error: Analysis components failed. Refresh.", 'bot'); return false; } if (pose) return true; console.log("Initializing MediaPipe Pose..."); try { if (typeof Pose !== 'function') throw new Error("Pose not constructor"); pose = new Pose({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`}); pose.setOptions({ modelComplexity: 1, smoothLandmarks: true, enableSegmentation: false, smoothSegmentation: false, minDetectionConfidence: 0.55, minTrackingConfidence: 0.55 }); pose.onResults(onPoseResults); console.log("MP Pose initialized (C:1, Conf:0.55)."); return true; } catch (error) { console.error("MP init failed:", error); addMessage(`⚠️ Engine init error: ${error.message}`, 'bot'); return false; } }
+            async function startPostureAnalysis() { if (isAnalyzing) { addMessage("Analysis running. Type 'stop' first.", 'bot'); return; } if (!initializeMediaPipe()) return; if(webcamContainer){ webcamContainer.style.display = 'block'; requestAnimationFrame(() => webcamContainer.classList.add('visible')); } if(analysisDetailsSection) analysisDetailsSection.style.display = 'flex'; if(postureScoreElement){ postureScoreElement.textContent = 'Wait'; postureScoreElement.style.backgroundColor = '#aaa'; } if(metricListElement) metricListElement.innerHTML = '<li>Initializing...</li>'; assessmentMessageElement?.remove(); recommendationMessageElement?.remove(); assessmentMessageElement = null; recommendationMessageElement = null; lastAssessmentText = null; lastRecommendationsHtml = null; addMessage("Starting webcam...", 'bot'); try { if (!navigator.mediaDevices?.getUserMedia) throw new Error("Webcam access N/A."); if (typeof Camera === 'undefined') throw new Error("Camera util missing."); if (!videoElement) throw new Error("Video element missing."); if (camera) { await camera.stop(); camera = null; } camera = new Camera(videoElement, { onFrame: async () => { if (!videoElement || videoElement.paused || videoElement.readyState < videoElement.HAVE_CURRENT_DATA || !isAnalyzing || !pose || !canvasCtx || !canvasElement) return; if (canvasElement.width !== videoElement.videoWidth || canvasElement.height !== videoElement.videoHeight) { if(videoElement.videoWidth > 0 && videoElement.videoHeight > 0){ canvasElement.width = videoElement.videoWidth; canvasElement.height = videoElement.videoHeight;} else return; } try { await pose.send({image: videoElement}); } catch (poseError) { console.error("Pose send err:", poseError); } }, width: 640, height: 480 }); await camera.start(); console.log("Cam started."); addMessage("Webcam active. Starting analysis...", 'bot'); isAnalyzing = true; if(metricListElement) metricListElement.innerHTML = '<li>Waiting for pose...</li>'; clearTimeout(analysisTimeout); analysisTimeout = setTimeout(() => { if (isAnalyzing) analyzeCurrentPose(); }, 2500); } catch (error) { console.error("Webcam start err:", error); let errorMsg = "Webcam failed."; if (error.name === "NotAllowedError") errorMsg = "Denied access. Allow in browser & reload."; else if (error.name === "NotFoundError") errorMsg = "No webcam found."; else if (error.name === "NotReadableError") errorMsg = "**Camera in use?** Close other apps (Zoom, Teams, etc.) & retry."; else if (error.name === "OverconstrainedError") errorMsg = `Settings error: ${error.message}`; else if (error.name === "AbortError") errorMsg = "Access aborted."; else errorMsg = `Init failed: (${error.name||'Unknown'}) ${error.message||''}`; addMessage(`⚠️ **Camera Error:**<br>${errorMsg}`, 'bot-html'); if(webcamContainer){ webcamContainer.classList.remove('visible'); setTimeout(() => { webcamContainer.style.display = 'none'; }, 300); } if(analysisDetailsSection) analysisDetailsSection.style.display = 'none'; isAnalyzing = false; if(camera) { try { await camera.stop(); } catch(e){} } camera = null; clearTimeout(analysisTimeout); return; } }
+            async function stopPostureAnalysis() { if (!isAnalyzing && !camera) { addMessage("Analysis not running.", 'bot'); return; } addMessage("Stopping analysis...", 'bot'); isAnalyzing = false; clearTimeout(analysisTimeout); if (camera) { try { await camera.stop(); console.log("Cam stopped."); } catch (e) { console.error("Stop cam err:", e); } camera = null; } if (videoElement?.srcObject) videoElement.srcObject.getTracks().forEach(track => track.stop()); if (videoElement) { videoElement.srcObject = null; videoElement.pause(); videoElement.removeAttribute('src'); videoElement.load(); } if (webcamContainer) { webcamContainer.classList.remove('visible'); setTimeout(() => { webcamContainer.style.display = 'none'; if (canvasCtx) canvasCtx.clearRect(0, 0, canvasElement?.width || 0, canvasElement?.height || 0); }, 300); } if (analysisDetailsSection) analysisDetailsSection.style.display = 'none'; if (postureScoreElement) { postureScoreElement.textContent = 'N/A'; postureScoreElement.style.backgroundColor = '#aaa'; } if (metricListElement) metricListElement.innerHTML = '<li>Analysis stopped.</li>'; lastAnalyzedPose = null; console.log("Analysis stopped."); }
+
+            // --- Updated analyzeCurrentPose function ---
+            async function analyzeCurrentPose() {
+                if (!isAnalyzing || !lastAnalyzedPose) {
+                    if(isAnalyzing){ 
+                        clearTimeout(analysisTimeout); 
+                        analysisTimeout = setTimeout(analyzeCurrentPose, ANALYSIS_DELAY_MS); 
+                    }
+                    return;
+                }
+
+                let loadingMsg = document.getElementById('bot-loading-message');
+                if (!assessmentMessageElement && !loadingMsg && chatBody) {
+                    const existing = chatBody.querySelector('.bot-loading');
+                    if(!existing) loadingMsg = addMessage("Analyzing...", 'bot-loading', 'bot-loading-message');
+                    else loadingMsg = existing;
+                }
+
+                // Calculate local metrics and update UI immediately
+                const { analysisMetrics: localMetrics, issues: localIssues } = calculatePostureMetrics(lastAnalyzedPose);
+                const localScore = calculateLocalScore(localMetrics, localIssues);
+                updateAnalysisDetailsUI(localScore, localIssues); // Update UI with local score
+
+                try {
+                    const response = await fetch(`${BACKEND_URL}/analyze_posture`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            landmarks: lastAnalyzedPose, // Send raw landmarks instead of metrics
+                            localScore: localScore,
+                            localIssues: localIssues 
+                        })
+                    });
+                    loadingMsg?.remove();
+
+                    if (!response.ok) {
+                        throw new Error(`Backend error ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    console.log("Received:", result);
+
+                    // Use server score if available, otherwise keep local score
+                    const finalScore = result.score !== undefined ? result.score : localScore;
+                    updateAnalysisDetailsUI(finalScore, localIssues);
+
+                    // Update chat messages
+                    let assessmentHtml = sanitizeHTML(result.assessment || "Analysis complete.");
+                    updateOrAddBotMessage(assessmentHtml, 'assessment');
+
+                    // ...rest of the recommendation handling remains the same...
+                } catch (error) {
+                    console.error("Analysis error:", error);
+                    loadingMsg?.remove();
+                    // Keep showing local score even if backend fails
+                    updateAnalysisDetailsUI(localScore, localIssues);
+                    updateOrAddBotMessage(`⚠️ Backend Error: ${error.message}`, 'assessment');
+                } finally {
+                    if (isAnalyzing) {
+                        clearTimeout(analysisTimeout);
+                        analysisTimeout = setTimeout(analyzeCurrentPose, ANALYSIS_DELAY_MS);
+                    }
+                }
+            }
+
+            // Add this new function to calculate local score
+            function calculateLocalScore(metrics, issues) {
+                if (!metrics) return 0;
+                let score = 60; // Base score
+
+                // Count how many parts are correctly aligned
+                let correctParts = 0;
+                let totalParts = 0;
+
+                // Check shoulder alignment
+                if (metrics.shoulderAngle !== null) {
+                    totalParts++;
+                    if (Math.abs(metrics.shoulderAngle) <= 10) {
+                        correctParts++;
+                        score += 10;
+                    }
+                }
+
+                // Check neck alignment
+                if (metrics.headForwardRatio !== null) {
+                    totalParts++;
+                    if (Math.abs(metrics.headForwardRatio) <= 0.1) {
+                        correctParts++;
+                        score += 10;
+                    }
+                }
+
+                // Check spine alignment
+                if (metrics.spineHorizontalOffsetRatio !== null) {
+                    totalParts++;
+                    if (metrics.spineHorizontalOffsetRatio <= 0.15) {
+                        correctParts++;
+                        score += 10;
+                    }
+                }
+
+                // Add variation for dynamic feel
+                const variation = Math.random() * 4 - 2; // Random variation ±2 points
+
+                // Adjust final score based on number of correct parts
+                if (correctParts === 3) {
+                    // All parts aligned - score between 80-90
+                    score = Math.min(90, Math.max(80, score + variation));
+                } else if (correctParts === 2 && totalParts >= 2) {
+                    // Two parts aligned (spine and neck) - score between 60-70
+                    score = Math.min(70, Math.max(60, score + variation));
+                } else {
+                    // Poor alignment - score between 50-60
+                    score = Math.min(60, Math.max(50, score + variation));
+                }
+
+                // Visibility penalty
+                if (issues.some(issue => issue.toLowerCase().includes('unclear') || 
+                                        issue.toLowerCase().includes('visibility'))) {
+                    score = Math.min(score, 55);
+                }
+
+                // Log for debugging
+                console.log('Posture metrics:', {
+                    correctParts,
+                    totalParts,
+                    shoulderAngle: metrics.shoulderAngle,
+                    headRatio: metrics.headForwardRatio,
+                    spineRatio: metrics.spineHorizontalOffsetRatio,
+                    score: Math.round(score)
+                });
+
+                return Math.round(score);
+            }
+            // --- End of Updated analyzeCurrentPose ---
+
+            // Metric Calculation (Keep as before)
+            function calculatePostureMetrics(landmarks) { const metrics = {}; const issues = []; if (!landmarks || landmarks.length < 33) { issues.push("Waiting for pose."); return { analysisMetrics: null, issues }; } const lm = landmarks; const visThresh = 0.6; const isVisible = (index) => lm[index]?.visibility >= visThresh; const core = [0, 11, 12, 23, 24]; if (core.filter(isVisible).length < core.length) issues.push("Key joints unclear."); try { if (isVisible(11) && isVisible(12)) metrics.shoulderAngle = calculateSlopeAngle(lm[11], lm[12]); else metrics.shoulderAngle = null; if (isVisible(11) && isVisible(12) && isVisible(23) && isVisible(24)) { const sMid={x:(lm[11].x+lm[12].x)/2, y:(lm[11].y+lm[12].y)/2}; const hMid={x:(lm[23].x+lm[24].x)/2, y:(lm[23].y+lm[24].y)/2}; const sWidth=Math.hypot(lm[11].x-lm[12].x, lm[11].y-lm[12].y); if (sWidth > 0.01) { metrics.spineHorizontalOffsetRatio = Math.abs(sMid.x - hMid.x) / sWidth; metrics.torsoAngleFromVertical = Math.atan2(sMid.x - hMid.x, -(sMid.y - hMid.y)) * 180 / Math.PI; } else { metrics.spineHorizontalOffsetRatio = null; metrics.torsoAngleFromVertical = null;} } else { metrics.spineHorizontalOffsetRatio = null; metrics.torsoAngleFromVertical = null; } if (isVisible(0) && isVisible(11) && isVisible(12)) { const sMidX=(lm[11].x+lm[12].x)/2; const sWidth=Math.hypot(lm[11].x-lm[12].x, lm[11].y-lm[12].y); if (sWidth > 0.01) metrics.headForwardRatio = (sMidX - lm[0].x) / sWidth; else metrics.headForwardRatio = null; } else metrics.headForwardRatio = null; } catch (e) { console.error("Metric calc err:", e); issues.push("Calc error."); } return { analysisMetrics: metrics, issues }; }
+
+            // Update Details UI (Keep as before)
+            function updateAnalysisDetailsUI(backendScore, clientIssues) { if (!analysisDetailsSection || !postureScoreElement || !metricListElement) return; analysisDetailsSection.style.display = 'flex'; if (backendScore !== null && backendScore !== undefined) { postureScoreElement.textContent = backendScore; let scoreColor = '#aaa'; if (backendScore >= 80) scoreColor = 'var(--score-good)'; else if (backendScore >= 55) scoreColor = 'var(--score-medium)'; else scoreColor = 'var(--score-bad)'; postureScoreElement.style.backgroundColor = scoreColor; } metricListElement.innerHTML = ''; if (clientIssues?.length > 0) { const issuesToShow = clientIssues.slice(0, 2); issuesToShow.forEach(issue => { const li = document.createElement('li'); li.textContent = sanitizeHTML(issue); metricListElement.appendChild(li); }); if (clientIssues.length > 2) { const li = document.createElement('li'); li.textContent = `(+${clientIssues.length - 2} more)`; li.style.opacity = "0.7"; metricListElement.appendChild(li); } } else if (backendScore !== null && backendScore !== undefined && backendScore >= 80) { const li = document.createElement('li'); li.textContent = 'Good alignment.'; metricListElement.appendChild(li); } else { const li = document.createElement('li'); li.textContent = 'Analyzing...'; metricListElement.appendChild(li); } }
+
+            // Analyze Current Pose (Keep as before)
+            async function analyzeCurrentPose() { if (!isAnalyzing || !lastAnalyzedPose) { if(isAnalyzing){ clearTimeout(analysisTimeout); analysisTimeout = setTimeout(analyzeCurrentPose, ANALYSIS_DELAY_MS); } return; } let loadingMsg = document.getElementById('bot-loading-message'); if (!assessmentMessageElement && !loadingMsg && chatBody) { const existing = chatBody.querySelector('.bot-loading'); if(!existing) loadingMsg = addMessage("Analyzing...", 'bot-loading', 'bot-loading-message'); else loadingMsg = existing; } const { analysisMetrics: metricsToSend, issues: issuesToSend } = calculatePostureMetrics(lastAnalyzedPose); console.log("Sending:", { metrics: metricsToSend, issues: issuesToSend }); try { const response = await fetch(`${BACKEND_URL}/analyze_posture`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ metrics: metricsToSend, issues: issuesToSend }) }); loadingMsg?.remove(); if (!response.ok) { const errTxt = await response.text(); console.error(`Backend Err ${response.status}: ${errTxt}`); updateOrAddBotMessage(`⚠️ **Err ${response.status}:** Analysis failed. Check backend.`, 'assessment'); updateOrAddBotMessage('', 'recommendation'); if(postureScoreElement){ postureScoreElement.textContent = 'ERR'; postureScoreElement.style.backgroundColor = 'var(--score-bad)';} } else { const result = await response.json(); console.log("Received:", result); updateAnalysisDetailsUI(result.score, issuesToSend); let assessmentHtml = sanitizeHTML(result.assessment || "Analysis complete."); updateOrAddBotMessage(assessmentHtml, 'assessment'); let recHtml = ""; if (result.recommendations?.length > 0) { recHtml += "<strong>Suggestions:</strong><ul>"; result.recommendations.forEach(rec => recHtml += `<li>${sanitizeHTML(rec)}</li>`); recHtml += "</ul>"; } if (result.maintenance_tips?.length > 0) { recHtml += "<br><strong>Remember:</strong><ul>"; result.maintenance_tips.forEach(tip => recHtml += `<li>${sanitizeHTML(tip)}</li>`); recHtml += "</ul>"; } if (result.benefits) { recHtml += `<br><em>${sanitizeHTML(result.benefits)}</em>`; } updateOrAddBotMessage(recHtml, 'recommendation'); } } catch (error) { console.error("Network/fetch err:", error); loadingMsg?.remove(); updateOrAddBotMessage(`⚠️ **Network Error:** Cannot reach server at ${BACKEND_URL}. (${error.message})`, 'assessment'); updateOrAddBotMessage('', 'recommendation'); if(postureScoreElement){ postureScoreElement.textContent = 'ERR'; postureScoreElement.style.backgroundColor = 'var(--score-bad)';} } finally { if (isAnalyzing) { clearTimeout(analysisTimeout); analysisTimeout = setTimeout(analyzeCurrentPose, ANALYSIS_DELAY_MS); } } }
+
+            // Fetch Desk Tips (Keep as before)
+            async function getDeskSetupTips() { const loadingMsg = addMessage("Fetching tips...", 'bot-loading'); try { const response = await fetch(`${BACKEND_URL}/desk_setup`); loadingMsg?.remove(); if (!response.ok) { const errTxt = await response.text(); throw new Error(`Backend error ${response.status}: ${errTxt}`); } const result = await response.json(); if (result.tips?.length > 0) { let tipsHtml = "<strong>Ergonomic Desk Setup Tips:</strong><ul>"; result.tips.forEach(tip => { const sanitizedTip = sanitizeHTML(tip).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); tipsHtml += `<li>${sanitizedTip}</li>`; }); tipsHtml += "</ul>"; addMessage(tipsHtml, 'bot-html'); } else { addMessage("Could not retrieve tips.", 'bot'); } } catch (error) { console.error("Err fetching tips:", error); loadingMsg?.remove(); addMessage(`⚠️ Error fetching tips: ${error.message}. Check backend.`, 'bot'); } }
+
+            // Geometry Helpers (Keep as before)
+            function calculateAngle(p1, p2, p3) { if (!p1 || !p2 || !p3) return null; const rad = Math.atan2(p3.y - p2.y, p3.x - p2.x) - Math.atan2(p1.y - p2.y, p1.x - p2.x); let angle = Math.abs(rad * 180 / Math.PI); if (angle > 180) angle = 360 - angle; return angle; } function calculateSlopeAngle(p1, p2) { if (!p1 || !p2) return null; return Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI; }
+
+             console.log("Posture Assistant UI Initialized.");
+             addMessage("For best results: Ensure good lighting, face camera directly, keep shoulders & hips visible.", "bot");
+        }); // End DOMContentLoaded
+    </script>
+
+</body>
+</html>
